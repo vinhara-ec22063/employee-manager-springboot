@@ -6,36 +6,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Entity
+@Table(name = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "employees")
-
 public class Employee {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Full name is required")
-    @Size(max = 100, message = "Name must be at most 100 characters")
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number must be between 10 and 15 digits")
+    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits")
     private String phone;
 
     @NotBlank(message = "Department is required")
     private String department;
 
     @NotNull(message = "Salary is required")
-    @Positive(message = "Salary must be a positive number")
+    @Positive(message = "Salary must be greater than zero")
     private Double salary;
 }
-
-

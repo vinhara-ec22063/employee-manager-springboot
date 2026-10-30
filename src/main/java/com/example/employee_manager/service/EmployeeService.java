@@ -6,33 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepo;
-    
-    @Autowired 
-    public EmployeeService(EmployeeRepository employeeRepo){
-        this.employeeRepo = employeeRepo;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    public List<Employee> getAllEmployees(String keyword) {
+        if (keyword != null && !keyword.isEmpty()) {
+            return employeeRepository.findByFullNameContainingIgnoreCase(keyword);
+        }
+        return employeeRepository.findAll();
     }
 
-    public List<Employee> getAllEmployees(){
-        return employeeRepo.findAll();
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
-    public Employee saveEmployee(Employee employee){
-        return employeeRepo.save(employee);
+    public Employee getEmployeeById(Long id) {
+        Optional<Employee> optional = employeeRepository.findById(id);
+        return optional.orElse(null);
     }
 
-    public Employee getEmployeeById(long id){
-        return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
+    public void deleteEmployee(Long id) {
+        employeeRepository.deleteById(id);
     }
-
-    public void deleteEmployeeById(long id){
-        employeeRepo.deleteById(id);
-    }
-
-    
-
 }
